@@ -176,14 +176,33 @@ a {
 /* Header */
 .main-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
   padding: 18px 28px;
   background: linear-gradient(180deg, rgba(10, 12, 18, 0.25), transparent);
   position: sticky;
   top: 0;
   backdrop-filter: blur(6px);
-  z-index: 40
+  z-index: 40;
+}
+
+.header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(180deg, #0b1230, #071025);
+  color: var(--text);
+  outline: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .search-bar {
@@ -508,9 +527,57 @@ a {
 }
 
 /* responsive */
+.logo {
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: 0.6px;
+}
+
+.logo span {
+  color: var(--accent-2);
+}
+
+.header-logo {
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: 1.2px;
+  color: var(--text);
+  display: block;
+}
+
+.header-logo span {
+  color: var(--accent-2);
+}
+
+@media (min-width: 1000px) {
+
+  /* Increase modal poster size on large screens */
+  .modal-card {
+    grid-template-columns: 300px 1fr !important;
+    max-width: 1100px !important;
+    /* increase max width for modal-card */
+  }
+
+  .modal-left img {
+    max-width: 300px !important;
+  }
+}
+
 @media (max-width:1000px) {
   .uf-sidebar {
     display: none
+  }
+
+  .header-logo {
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: 0.6px;
+    color: var(--text);
+    display: block;
+  }
+
+  .header-logo span {
+    color: var(--accent-2);
   }
 
   .main-header {
@@ -564,11 +631,18 @@ a {
     gap: 8px;
   }
 
+  .search-logout-container {
+    display: flex;
+    width: 100%;
+  }
+
   .search-bar {
+    display: none;
     flex: 1;
     min-width: 0;
     padding: 10px 12px;
     font-size: 14px;
+    width: 100%;
   }
 
   #logout-btn-header {
