@@ -43,10 +43,12 @@
 
             <!-- Top Header -->
             <header class="main-header">
-                <input type="text" placeholder="Search movies, TV shows..." class="search-bar">
+                <div class="search-logout-container">
+                    <input type="text" placeholder="Search movies, TV shows..." class="search-bar">
+                    <button id="logout-btn-header" class="btn">Logout</button>
+                </div>
 
                 <div class="header-actions">
-                    <button class="btn">Download Video</button>
                     <button class="icon-btn">⏱ Watch History</button>
                 </div>
             </header>
@@ -151,6 +153,21 @@
                 alert("Error logging out: " + error.message);
             }
         });
+
+        // Also add logout to the header logout button
+        const logoutBtnHeader = document.getElementById("logout-btn-header");
+        if (logoutBtnHeader) {
+            logoutBtnHeader.addEventListener("click", async (e) => {
+                e.preventDefault();
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('welcomeUsername');
+                    window.location.href = "../otherhtmlpages/signin.html";
+                } catch (error) {
+                    alert("Error logging out: " + error.message);
+                }
+            });
+        }
     </script>
 
     <!-- =========================== -->
