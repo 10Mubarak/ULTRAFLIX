@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subscribe - UltraFlix</title>
+    <link rel="stylesheet" href="../othercsspages/subscribe.css">
+    <link rel="shortcut icon" href="../images/ultraflix-plus-logo-removebg-preview.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="sub-container">
+        <div class="sub-card">
+            <h1>Upgrade to <span>UltraFlix Premium</span></h1>
+            <p class="sub-desc">Unlock unlimited access to movies, shows, and exclusive content.</p>
+
+            <div class="plans">
+                <div class="plan">
+                    <h2>Basic Plan</h2>
+                    <p class="price">$4.99/month</p>
+                    <ul>
+                        <li>✔ Good quality</li>
+                        <li>✔ Access to all movies</li>
+                        <li>✖ No Offline Downloads</li>
+                    </ul>
+                    <button class="btn-select" onclick="activateSubscription()">Choose Plan</button>
+                </div>
+
+                <div class="plan premium">
+                    <h2>Premium Plan</h2>
+                    <p class="price">$9.99/month</p>
+                    <ul>
+                        <li>✔ Full HD + 4K</li>
+                        <li>✔ All movies & shows</li>
+                        <li>✔ Offline Downloads</li>
+                        <li>✔ Ad-Free Experience</li>
+                    </ul>
+                    <button class="btn-select" onclick="activateSubscription()">Choose Premium</button>
+                </div>
+            </div>
+
+            <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        function activateSubscription() {
+            Swal.fire({
+                title: "Confirm Subscription",
+                text: "Do you want to activate UltraFlix Premium?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, activate",
+                background: "#111",
+                color: "#fff",
+                confirmButtonColor: "#00e1ff"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Activate subscription
+                    localStorage.setItem("ultraflixSubscribed", "true");
+
+                    Swal.fire({
+                        title: "Subscription Activated!",
+                        text: "Enjoy UltraFlix Premium.",
+                        icon: "success",
+                        background: "#111",
+                        color: "#fff",
+                        confirmButtonColor: "#00e1ff"
+                    }).then(() => {
+                        window.location.href = "../dashboard/dashboard.html";
+                    });
+                }
+            });
+        }
+
+        function goBack() {
+            window.location.href = "../dashboard/dashboard.html";
+        }
+    </script>
+
+</body>
+</html>

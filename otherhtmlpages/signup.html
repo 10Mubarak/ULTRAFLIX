@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../othercsspages/signup.css">
+    <link rel="shortcut icon" href="../images/ultraflix-plus-logo.jpeg" type="image/x-icon">
+</head>
+
+<body>
+    <section class="signup-hero">
+
+        <div class="signup-overlay"></div>
+
+        <div class="signup-card">
+            <h2>Create Your Account</h2>
+
+            <form class="signup-form" id="signup-form">
+
+                <div class="input-line">
+                    <input id="username" type="text" required>
+                    <label>Username</label>
+                </div>
+
+                <div class="input-line">
+                    <input id="email" type="email" required>
+                    <label>Email</label>
+                </div>
+
+                <div class="input-line">
+                    <input id="fullname" type="text" required>
+                    <label>Full Name</label>
+                </div>
+
+                <div class="input-line">
+                    <input id="password" type="password" required>
+                    <label>Password</label>
+                </div>
+
+                <div class="input-line">
+                    <input id="confirm-password" type="password" required>
+                    <label>Confirm Password</label>
+                </div>
+
+                <!-- Corrected: button must be type="submit" -->
+                <button type="submit" class="signup-btn">Create Account</button>
+
+                <p class="signin-link">
+                    Already a member? <a href="./signin.html">Sign In</a>
+                </p>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } 
+            from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTJUU0Vyu7tpspEYYSRtO_Tu0uiIqu5_k",
+            authDomain: "ultraflix-59234.firebaseapp.com",
+            projectId: "ultraflix-59234",
+            storageBucket: "ultraflix-59234.firebasestorage.app",
+            messagingSenderId: "971160548494",
+            appId: "1:971160548494:web:3125aa3da77d26c90cc5df"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // SIGN-UP FUNCTION
+        document.getElementById("signup-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                alert("Account created successfully!");
+                window.location.href = "signin.html";
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    </script>
+
+</body>
+
+</html>

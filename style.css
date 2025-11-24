@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+/* Apply Poppins for all text by default */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Use Montserrat for titles */
+h1, h2, h3, h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    background: linear-gradient(90deg,
+        #FFFFFF,
+        #FFFFFF,
+        #7E0E8A,
+        #fffdfe,
+        #FF8A3D
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1.3s ease-out forwards;
+}
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+p{
+  opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1.3s ease-out forwards;
+}
+
+/* If you want your hero title extra bold */
+.hero-content h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+}
+
+/* Optional: Buttons look better with Montserrat */
+.btn, .cta-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+
+
+.hero-div {
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url("./images/Image_fx\ \(6\).jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 20px; */
+  padding-right: 20px;
+  padding-left: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.logo {
+  height: 110px;
+  /* Adjust as needed */
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #20133A;
+  color: white;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+
+
+
+/* HERO CONTENT */
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  text-align: center;
+  color: #fff;
+  max-width: 700px;
+  padding: 20px;
+  z-index: 5;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* CTA Button */
+/* .cta-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #f40612;
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 28px;
+  text-decoration: none;
+  transition: 0.3s ease;
+} */
+
+/* .cta-btn:hover {
+  background: #e11722;
+} */
+
+/* Small text */
+/* .hero-small {
+  display: block;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+} */

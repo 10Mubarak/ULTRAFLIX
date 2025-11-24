@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UltraFlix Dashboard</title>
+    <link rel="stylesheet" href="../othercsspages/dashboard.css" />
+    <link rel="shortcut icon" href="../images/ultraflix-plus-logo-removebg-preview.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="uf-dashboard">
+
+        <!-- Sidebar -->
+        <aside class="uf-sidebar">
+            <div class="logo">Ultra<span>Flix</span></div>
+
+            <div class="user-profile">
+                <img src="../assets/images/user.jpg" alt="profile" id="profile-img" />
+                <input type="file" id="profile-upload" accept="image/*" style="display: none;" />
+                <h4 id="username-display">User</h4>
+                <button class="upload-btn" onclick="document.getElementById('profile-upload').click()">
+                    Upload Picture
+                </button>
+            </div>
+
+            <nav class="menu">
+                <a class="active" href="#"><i>🏠</i> Home</a>
+                <a href="#"><i>🎬</i> Movies</a>
+                <a href="#"><i>📺</i> TV Shows</a>
+                <a href="#"><i>🔥</i> Trending</a>
+                <a href="#"><i>⬇</i> Downloads</a>
+                <a href="#"><i>⚙</i> Settings</a>
+                <a href="#" id="logout-btn"><i>🚪</i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="uf-main">
+
+            <!-- Top Header -->
+            <header class="main-header">
+                <input type="text" placeholder="Search movies, TV shows..." class="search-bar">
+
+                <div class="header-actions">
+                    <button class="btn">Download Video</button>
+                    <button class="icon-btn">⏱ Watch History</button>
+                </div>
+            </header>
+
+            <!-- Hero Carousel -->
+            <section class="hero-carousel">
+                <div class="hero-slide active" style="background-image:url('../assets/hero/slide1.jpg')">
+                    <div class="hero-info">
+                        <h2>Last Samurai Standing</h2>
+                        <p>2025 • Action, Drama, History</p>
+                        <button class="btn-primary">Watch Now</button>
+                    </div>
+                </div>
+
+                <div class="hero-slide" style="background-image:url('../assets/hero/slide2.jpg')">
+                    <div class="hero-info">
+                        <h2>The Manipulated</h2>
+                        <p>2024 • Thriller, Crime</p>
+                        <button class="btn-primary">Watch Now</button>
+                    </div>
+                </div>
+
+                <button class="slide-prev">❮</button>
+                <button class="slide-next">❯</button>
+            </section>
+
+            <!-- MOVIE SECTIONS (TMDB) -->
+            <section id="rowTrending" class="movie-row"></section>
+            <section id="rowPopular" class="movie-row"></section>
+            <section id="rowTopRated" class="movie-row"></section>
+            <section id="rowUpcoming" class="movie-row"></section>
+            <section id="rowNewReleases" class="movie-row new-releases-row"></section>
+            <section id="rowAction" class="movie-row"></section>
+            <section id="rowComedy" class="movie-row"></section>
+            <section id="rowHorror" class="movie-row"></section>
+            <section id="rowRomance" class="movie-row"></section>
+            <section id="rowSciFi" class="movie-row"></section>
+
+        </main>
+
+    </div>
+
+    <!-- =========================== -->
+    <!-- Firebase Auth Script       -->
+    <!-- =========================== -->
+    <script type="module">
+        // Import Firebase
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+        import {
+            getAuth,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTJUU0Vyu7tpspEYYSRtO_Tu0uiIqu5_k",
+            authDomain: "ultraflix-59234.firebaseapp.com",
+            projectId: "ultraflix-59234",
+            storageBucket: "ultraflix-59234.firebasestorage.app",
+            messagingSenderId: "971160548494",
+            appId: "1:971160548494:web:3125aa3da77d26c90cc5df"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Function to update username display
+        function updateUsernameDisplay(user) {
+            const usernameDisplay = document.getElementById('username-display');
+            if (usernameDisplay) {
+                const storedUsername = localStorage.getItem('welcomeUsername');
+                if (storedUsername) {
+                    usernameDisplay.textContent = storedUsername;
+                } else if (user && user.displayName) {
+                    usernameDisplay.textContent = user.displayName;
+                } else {
+                    usernameDisplay.textContent = 'User';
+                }
+            }
+        }
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            updateUsernameDisplay(user);
+        });
+
+        // Logout Function
+        document.getElementById("logout-btn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                // Clear local storage (keep profile picture)
+                localStorage.removeItem('welcomeUsername');
+                // Redirect to sign-in page
+                window.location.href = "../otherhtmlpages/signin.html";
+            } catch (error) {
+                alert("Error logging out: " + error.message);
+            }
+        });
+    </script>
+
+    <!-- =========================== -->
+    <!-- TMDB Movie Loader Script   -->
+    <!-- =========================== -->
+    <script>
+        // ================================
+        // UltraFlix Premium - TMDB Loader
+        // ================================
+        const apiKey = "497de66fa2506c98f885d2c07951a446";
+        const baseURL = "https://api.themoviedb.org/3";
+        const imgBase = "https://image.tmdb.org/t/p/w500";
+
+        const sections = [
+            { id: "rowTrending", title: "Trending Now 🔥", url: "/trending/movie/week" },
+            { id: "rowPopular", title: "Popular Movies ⭐", url: "/movie/popular" },
+            { id: "rowTopRated", title: "Top Rated 📽", url: "/movie/top_rated" },
+            { id: "rowUpcoming", title: "Coming Soon 🚀", url: "/movie/upcoming" },
+            { id: "rowNewReleases", title: "New Releases ✨", url: "/movie/now_playing" },
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAllSections();
+            setupSearch();
+            showWelcomeAlert();
+        });
+
+        async function fetchMovies(endpoint) {
+            try {
+                const res = await fetch(`${baseURL}${endpoint}?api_key=${apiKey}`);
+                const data = await res.json();
+                return data.results || [];
+            } catch (err) {
+                console.error("API ERROR:", err);
+                return [];
+            }
+        }
+
+        async function loadAllSections() {
+            for (let sec of sections) {
+                loadMovieRow(sec.id, sec.title, sec.url);
+            }
+        }
+
+        async function loadMovieRow(containerId, title, endpoint) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const movies = await fetchMovies(endpoint);
+            container.innerHTML = `<h3>${title}</h3><div class="row-cards"></div>`;
+            const row = container.querySelector(".row-cards");
+
+            if (movies.length === 0) {
+                row.innerHTML = "<p class='empty-msg'>No movies found.</p>";
+                return;
+            }
+
+            movies.forEach(movie => {
+                const img = document.createElement("img");
+                img.src = movie.poster_path ? imgBase + movie.poster_path : "./assets/no-poster.png";
+                img.alt = movie.title;
+                img.classList.add("movie-card");
+                img.onclick = () => openMovieDetails(movie.id);
+                row.appendChild(img);
+            });
+        }
+
+
+        // Modal Movie Details
+        async function openMovieDetails(movieId) {
+            const details = await fetch(`${baseURL}/movie/${movieId}?api_key=${apiKey}&append_to_response=videos`);
+            const movie = await details.json();
+            const trailer = movie.videos.results.find(v => v.type === "Trailer");
+
+            const modal = document.createElement("div");
+            modal.className = "movie-modal";
+            modal.innerHTML = `
+                <div class="modal-backdrop"></div>
+                <div class="modal-card">
+                    <div class="modal-left">
+                        <img src="${movie.poster_path ? imgBase + movie.poster_path : "./assets/no-poster.png"}" alt="${movie.title}" />
+                    </div>
+                    <div class="modal-right">
+                        <button class="modal-close">&times;</button>
+                        <h2>${movie.title}</h2>
+                        <div class="meta">⭐ Rating: ${movie.vote_average}</div>
+                        <div class="overview">${movie.overview}</div>
+                        <div class="trailer-wrapper">
+                            ${trailer ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : "<p>No trailer available</p>"}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.classList.add("show");
+            modal.querySelector(".modal-close").onclick = () => modal.remove();
+            modal.querySelector(".modal-backdrop").onclick = () => modal.remove();
+        }
+
+        // ======================
+        // Hero Carousel Function
+        // ======================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".hero-slide");
+
+        document.querySelector(".slide-next").onclick = () => changeSlide(1);
+        document.querySelector(".slide-prev").onclick = () => changeSlide(-1);
+
+        function changeSlide(dir) {
+            slides[currentSlide].classList.remove("active");
+            currentSlide = (currentSlide + dir + slides.length) % slides.length;
+            slides[currentSlide].classList.add("active");
+        }
+
+        // Profile Picture Upload
+        const profileImg = document.getElementById('profile-img');
+        const profileUpload = document.getElementById('profile-upload');
+        const savedPic = localStorage.getItem('profilePic');
+
+        if (savedPic) profileImg.src = savedPic;
+
+        profileUpload.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const dataURL = e.target.result;
+                    profileImg.src = dataURL;
+                    localStorage.setItem('profilePic', dataURL);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Welcome Alert Function
+        function showWelcomeAlert() {
+            const username = localStorage.getItem('welcomeUsername');
+            if (username) {
+                // Update the username display
+                const usernameDisplay = document.getElementById('username-display');
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = username;
+                }
+
+                // Use SweetAlert2 if available, else fallback to alert
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Welcome back!',
+                        text: `Welcome ${username}!`,
+                        icon: 'success',
+                        confirmButtonText: 'Continue',
+                        background: '#0f1320',
+                        color: '#e9f1ff',
+                        confirmButtonColor: '#00e1ff'
+                    });
+                } else {
+                    alert(`Welcome ${username}!`);
+                }
+                // Clear the username after showing to avoid repeated alerts
+                localStorage.removeItem('welcomeUsername');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
